@@ -88,8 +88,8 @@ bienesraices/
 1. Clona el repositorio
 
 ```bash
-git clone https://github.com/HubCde/claulet
-cd claulet
+git clone https://github.com/Jescad29/bienesraices
+cd bienesraices
 ```
 
 2. Instala las dependencias:
