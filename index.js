@@ -9,7 +9,6 @@ app.set('views', './views');
 
 
 app.use('/auth', usuarioRoutes);
-app.use('/login', usuarioRoutes);
 
 
 const port = 3000;
