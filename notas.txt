@@ -1,0 +1,11 @@
+* pug:    
+    - Una dependencia que utilizaremos es pug: la cual nos simplifica el escribir html,
+      poner clases o ID y aparte podemos integrar cosas como bucles(if, else etc..) tambien
+      e incluir variables de manera rapida.
+    - Tambien es muy limpia su sintaxis.
+    - Hay que cuidar la identación.
+
+* MVC (Model View Controller)
+    Es un patron de arquitectura de software que permite la separación de obligaciones de cada pieza de tu código. 
+
+    - Enfatiza la separación de la lógica de programación con la presentación. 
