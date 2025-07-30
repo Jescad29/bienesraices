@@ -1,3 +1,7 @@
+* Iniciar el servidor:  
+        - node index.js si no tienes script
+        - npm start server (En caso de tener un scrip en package.json)
+
 * pug:    
     - Una dependencia que utilizaremos es pug: la cual nos simplifica el escribir html,
       poner clases o ID y aparte podemos integrar cosas como bucles(if, else etc..) tambien
@@ -36,4 +40,71 @@
         soportar nuestra aplicación.
 
         Ejemplo: Si el Usuario accede a /clientes el router ya tiene registrada esa ruta y un controlador con una función que sabe que Modelo debe llamar y que vista mostrar cuando el usuario visita esa URL.
+
+    Tailwind:
+    Para instalar tailwind e implementarlos.
+
+        Primero: Instalamos Tailwind como dependencia de desarrollo (solo se utiliza en el desarrollo y no en produccion o cuando se esta ejecutando la app.)
+            - npm i -D tailwindcss
+
+        Segundo: Crearemos una caperta css en nuestra carpeta public y dentro abriremos un archivo tailwind.css en donde escribiremos las siguientes lineas:
+
+                @tailwind base;
+                @tailwind components;
+                @tailwind utilities;
+        
+        Tercero: Metemos el comando:
+
+                npx tailwindcss init -p  
+                - Esto lo que va a hacer es que nos va a crear dos archivos (tailwind.config.js y postcss.config.js) 
+                
+                ---- BUG ----
+                    Aqui tuvimos un error y lo que hicimos fue eliminar node_modules con:
+                    -   rm -rf node_modules package-lock.json
+
+                    Limpiamos el cache corrupto
+                    -   npm cache clean --force
+
+                    Instalamos las dependencias nuevamente:
+                    -   npm install
+
+                    Solucion: El problema es que tailwind 4 ya no tiene el comando tailwindcss init
+                    por que ya no ocupa el archivo tailwind.config.js
+                    - Para que funcionara tuvimos que bajar el versionado 
+                        npm install -D tailwindcss@3.3.5
+                
+                    - Y luego ya podemos meter el siguiente comando con normalidad:
+                        npx tailwindcss init -p
+
+    Crear un Layout Principal:
+        1.- Antes que nada tenemos que crear nuestra carpeta layout/ en la carpeta views de nuestro proyecto y creamos el archivo index.pug.
+            Nota: Podemos crear nuestro doctype html con el signo " ! ",
+
+        2.- Para indicar a nuestros templates que lo van a utilizar lo hacemos por medio de extends la cual es una directiva de pug.
+
+            extends ../layout/index
+
+        3.- Si vamos directamente a http://localhost:3000/auth/login y recargamos, nos va a aparecer el siguiente error:
+
+            Error: C:\Users\vic_s\Desktop\proyectos_directos\proyectos_node\bienesraices_mvc\views\auth\login.pug:3:1
+
+            Only named blocks and mixins can appear at the top level of an extending template.
+            
+            Nota: Esto pasa por que en nuestro archivo login.pug tenemos codigo que nos marca error ya que no estamos indicando en nuestro template con pug el bloque que estar libre para ser utilizado
+
+            main(class="mx-auto container mt-10 px-2")
+                block contenido
+
+            y en nuestro archivo index.pug si utilizamos nuestro extends y le agregamos nuestro block contenido.
+
+                block contenido
+                    div 
+                        h2.text-center.text-6xl Inicia sesión 
+
+            y lo mejor es que puedes tener diferentes bloques, puedes tener uno para sidebar, para el footer, etc. de esa forma no duplicamos codigo y los cambios se hacen mas rapidos
+
+
+
+
+
     
