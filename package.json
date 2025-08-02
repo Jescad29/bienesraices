@@ -19,8 +19,11 @@
   "author": "Jesus Cadena Victor @hub-code",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^17.2.1",
     "express": "^5.1.0",
-    "pug": "^3.0.3"
+    "mysql2": "^3.14.3",
+    "pug": "^3.0.3",
+    "sequelize": "^6.37.7"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",

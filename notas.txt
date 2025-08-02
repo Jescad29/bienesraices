@@ -102,9 +102,80 @@
                         h2.text-center.text-6xl Inicia sesión 
 
             y lo mejor es que puedes tener diferentes bloques, puedes tener uno para sidebar, para el footer, etc. de esa forma no duplicamos codigo y los cambios se hacen mas rapidos
+    Routing entre paginas:
 
+        Nota: Recuerda que el routing para navegar entre paginas debes tomar nuestro endpoint general de nuestro archivo index.js y de nuestro archivo routes 
 
+            app.use('/auth', usuarioRoutes); En este caso tomaremos /autch 
+            router.get('/login', formularioLogin); y en este tomaremos /login
 
+            De esa manera obtenemos la ruta  /autch/login que utilizaremos en nuestra vista dentro de nuestro menu o algun boton que redireccione. 
 
+                a.text-gray-500.text-xs(href="/auth/login") ¿Ya tienes cuenta? Inicia Sesión
+    ORM: ¿Que es un orm?
+        Son las iniciales de Object Relational Mapping y es una tecnica que se utiliza donde los datos de una base de datos son tratados como objetos, utilizando un 
+        paradigma de programación Orientada a Objetos.
 
+        Node.js tiene una gran cantidad de ORM's que se instalan como librería.
+        En MVC, un ORM se relaciona bastante con el Modelo.
+
+        Ventajas.
+            - Comenzar a crear aplicaciones que utilicen bases de datos, sin necesidad de escribir código SQL y tampoco saber sobre modelado de bases de datos. 
+
+            - Velocidad en desarrollo ya que tienen una gran cantidad de métodos para crear, listar, actualizar o eliminar datos.
+
+            - La mayoría cuentan con todas las medidas de seguridad.
+
+            ORM's en node
+                - Prisma
+                - Sequelize
+                - Bookshelf.js
+                - Mongoose
+                - TypeORM
     
+    Conectar una app a nuestra base de datos:
+        
+        1.- Instalar dependencias:
+            npm i Sequelize mysql2
+        2.- Creamos la carpeta config y el archivo db.js donde tendremos la configuracion de la base de datos. 
+        3.- En el archivo db.js
+            - Importamos las dependencia: import Sequelize from "sequelize";
+            - creamos una instancia const db = new Sequelize()    La cual toma 4 parametros nombre de la base de datos, el usuario, el password y un objeto de configuración al cual podemos pasarle mas opciones. 
+        4.- Configuramos nuestra base de datos:
+                Alerta!!!! Estos datos son sencibles a si que acuerdate protegerlos 
+                utilizando variables de entorno puedes utilizar la biblioteca dotenv y mandas a llamar tus variables entorno con process.
+
+                const db = new Sequelize('bienesraices_node_mvc', 'root', '', {
+                    host: 'localhost',
+                    port: 3306,
+                    dialect: 'mysql',
+                    define: {
+                        timestamps: true
+                    },
+                    pool: {
+                        max: 5,
+                        acquire: 3000,
+                        idle: 10000
+                    }
+                });
+
+                - ( timestamps: true ) Nos ayuda a que cuando un usaurio se registra, nos agrega dos columnas extra a la tabla de usuarios con la fecha y la hora de cuando fue creado. 
+                - (pool o conexion pool) Cada que yo visito un sitio web, si requiero conectarme a la base de datos se va a crear una conexion a la base de datos
+                la conexion a la base de datos es algo que consume muchos recursos entonces este pool de conexiones eso es lo que hace, configura como es que 
+                va a ser el comportamiento para conexiones nuevas o existentes al igual que mantener o reutilizar las conexiones que esten vivas
+                    - max y min ( max: 5 ) Es el maximo de conexiones que va a hacer
+                    - acquire 30000 Es el tiempo que va a pasar tratando de elaborar una conexion antes de que marque error en este caso 3 segundos
+                    - idle es el tiempo que le da a una conexion que no se esta utilizando finalice en este caso 10 segundos para liberar espacio o memoria.
+        5.- Mandamos a llamar nuestra base de datos en nuestro archivo principal
+
+            - import db from './config/db.js'
+
+            // Conexion a la base de datos en este caso creamos un try-catch con logs para saber si la conexion estuvo correcta o no. 
+
+                try {
+                    await db.authenticate(); 
+                    console.log('Conexión Correcta a la Base de datos')
+                } catch (error) {
+                    console.log('Error en la conexion a la base de datos')
+                }
+

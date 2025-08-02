@@ -1,8 +1,17 @@
 import express from 'express';
 import usuarioRoutes from './routes/usuario.routes.js'
+import db from './config/db.js'
 
 // Crear la app
 const app = express();
+
+// Conexion a la base de datos 
+try {
+    await db.authenticate(); 
+    console.log('Conexión Correcta a la Base de datos')
+} catch (error) {
+    console.log('Error en la conexion a la base de datos')
+}
 
 // Habilitar vistas
 app.set('view engine', 'pug');
