@@ -179,3 +179,38 @@
                     console.log('Error en la conexion a la base de datos')
                 }
 
+    - Difiniendo un modelo: 
+        - Creamos nuestra carpeta models en la raiz de nuestro proyecto y creamos el archivo Usuarios.js
+        - Dentro de nuestro archivo usuarios importamos 'sequelize'
+            
+            import { DataTypes } from 'sequelize';  Es lo mismo si importamos sequelize en ves de { DataTypes }
+            import db from '../config/db'; Tambien llamamos a nuestra configuracion de la base de datos de archivo db.js de config
+
+            y Sobre esa instancia que va a tener esa conexion utilizamos define('') que es la forma en la que defines un nuevo modelo y dentro definimos el nombre que va a llevar nuestra tabla define('usuarios') y creamos el objeto con la configuracion de las diferentes columnas y tipos de datos que va a tener esta tabla de usuarios.
+
+                const Usuario = db.define('usuarios', {
+                    ......... Columnas .........
+                }); 
+        -   Crear columnas en nuestra tabla.
+                
+                const Usuario = db.define('usuarios', {
+                    nombre: {
+                        type: DataTypes.STRING,
+                        allowNull: false
+                    },
+                    email: {
+                        type: DataTypes.STRING,
+                        allowNull: false
+                    },
+                    password: {
+                        type: DataTypes.STRING,
+                        allowNull: false
+                    },
+                    token: DataTypes.STRING,
+                    confirmado: DataTypes.BOOLEAN
+                });
+
+            Nota: No todos los datos son soportados leer la documentacion.
+                https://sequelize.org/api/v6/variable/index.html#static-variable-DataTypes
+
+            
