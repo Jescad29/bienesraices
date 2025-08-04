@@ -28,20 +28,19 @@
 ```bash
 
 bienesraices/
-├── index.js                      
-├── server.js                   # Arranca el servidor
+├── index.js                                     # Arranca el servidor
 ├── routes/
-│   ├── 
+│   ├── usuario.routes.js
 │   ├── 
 │   ├── 
 │   └── 
 ├── controllers/
-│   ├── 
+│   ├── usuario.controller.js
 │   ├── 
 │   ├── 
 │   └── 
 ├── models/
-│   ├── 
+│   ├── Usuario.js
 │   ├── 
 │   └── 
 ├── middleware/
@@ -49,27 +48,30 @@ bienesraices/
 │   ├── 
 │   └── 
 ├── views/                      
-│   ├── 
-│   ├── 
-│   ├── 
-│   ├── 
-│   ├── 
-│   └── 
+│   ├── autch/
+│   │   ├── login.pug
+│   │   ├── olvide-password.pug
+│   │   └── registro.pug
+│   └── layout/
+│       └── index.pug
 ├── public/
-│   ├── assets/
-│   ├── 
-│   ├── 
-│   ├── 
-│   ├── 
-│   ├── 
-│   ├── 
+│   ├── css/
+│   │   ├── app.css
+│   │   └── tailwind.css
+│   ├── img/
+│   │   ├── 
+│   │   └── 
+│   ├── js/
+│   │   ├── 
+│   │   └── 
 │   ├── 
 │   └── 
-├── temp_uploads/
-└── 
-└── 
-└── package-lock.json
-└── package.json
+├── .env
+├── .gitignore
+├── postcss.config.js
+├── tailwind.config.js
+├── package-lock.json
+├── package.json
 └── README.md
 ```
 
@@ -78,10 +80,16 @@ bienesraices/
 
 - Node.js
 - Express.js
-- nodemon
+- Nodemon
+- Tailwind
+- Pug
+- MySQL
+- Sequelize
 
 ## funcionalidades realizadas hasta el momento 🐱‍🏍
-- 
+- Login
+- Registro
+- Olvide Password
 
 ## 🛠️ Instalación
 
@@ -113,6 +121,6 @@ npm run server
 4. Abre en tu navegador.
 
 ```
-http://localhost:3000
+http://localhost:3000/auth/login
 
 ```
