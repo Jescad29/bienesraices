@@ -213,4 +213,33 @@
             Nota: No todos los datos son soportados leer la documentacion.
                 https://sequelize.org/api/v6/variable/index.html#static-variable-DataTypes
 
-            
+        - Como podemos leer los datos que nos envia un formulario para guardarlos en una base de datos o hacer uso de esa información, como express es muy minimalista tenemos que activar esta parte, ya que los datos se van a encontrar en req.body
+        si nosotros ponemos un console log en nuestro controlador
+
+            const registrar = async (req, res) => {    Nos va a lanzar undefind por que aun
+                console.log(req.body)                  no podemos recibir datos.
+            };
+
+            Para recibir datos lo que tenemos que hacer es ocupar use:
+                // Habilitar lectura de datos de formularios.
+                app.use( express.urlencoded({extended: true}))
+
+            de esta manera ya estariamos recibiendo un dato como este:
+            Conexión Correcta a la Base de datos
+                El servidor esta funcionando en el puerto 3000
+                Registrando ...... .... ... . 
+                {
+                  nombre: 'Victor',
+                  email: 'victor@jes.com',
+                  password: 'victor123',
+                  repetir_password: 'victor123'
+                }
+
+            - Y para agregarlo a nuestra base de datos como un nuevo usuario ?
+
+                    const usuario = await Usuario.create(req.body)
+                        res.json(usuario)
+
+            - Y como agregamos una validacion de datos?
+                Podemos utilizar express-validator 
+                npm i expres-validator
