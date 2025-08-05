@@ -242,4 +242,136 @@
 
             - Y como agregamos una validacion de datos?
                 Podemos utilizar express-validator 
-                npm i expres-validator
+                npm i express-validator
+
+                - utilizamos las validaciones de express-validator al momento de crear al usuario
+
+                // Validación
+                await check('nombre').notEmpty().withMessage('El nombre es obligatorio').run(req)
+                await check('email').notEmpty().withMessage('El correo es obligatorio').isEmail().          withMessage('Eso no parece un email').run(req)
+                await check('password').isLength({ min: 6 }).withMessage('El Password debe ser de al            menos 6 caracteres').run(req)
+                await check('repetir_password').custom((value, { req }) => value === req.body.          password).withMessage('Los password no son iguales').run(req)
+    
+                let resultado = validationResult(req)
+
+                - Y dentro de nuestro archivo pug creamos un if para que valide la informacion y cree las alertas necesarias con un each y nos retorne esta parte : errores: [{msg:'El Usuario ya esta Registrado'}],
+
+                        if errores 
+                            div(class="max-w-md mx-auto my-10")
+                                each error in errores 
+                                    p.bg-red-600.text-white.uppercase.text-xs.text-center.p-2.mb-1.font-bold= error.msg
+
+            - Auto llenado de campo y verificar si el usuario esta duplicado por medio del email. 
+                - Utilizamos la operacion ternaria dentro de " value = " para asignar un valor dependiendo de si usuario existe o no.
+
+                input#email.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Tu email" type="email" name="email" value= usuario? usuario.email : '')
+
+                input(type="text", name="nombre", value=usuario ? usuario.nombre : '')
+                input(type="email", name="email", value=usuario ? usuario.email : '')
+                input(type="password", name="password")  // ← Este NO se rellena
+
+                    usuario.controller.js/
+
+                    //Extraer los datos
+                    const {nombre, email, password} = req.body
+
+                    // Verficar que el usuario no este duplicado
+                    const existeUsuario = await Usuario.findOne({ where: { email } })
+
+                    if(existeUsuario) {
+                        return res.render('auth/registro', {
+                            pagina: 'Crear Cuenta',
+                            errores: [{msg:'El Usuario ya esta Registrado'}],
+                            usuario: {
+                                nombre: req.body.nombre,
+                                email: req.body.email
+                            }
+                        })
+                    }
+
+                - Si el usuario intenta registrarse con un email existente: const existeUsuario = await Usuario.findOne({ where: { email } });
+                                if (existeUsuario)
+
+                - Se vuelve a mostrar el formulario (auth/registro) " return res.render('auth/registro', {" 
+
+                - Se pasan los datos que ya había escrito (nombre, email)
+                        usuario: {
+                            nombre: req.body.nombre,
+                            email: req.body.email
+                        }
+
+                - Y puedes rellenar automáticamente esos campos en el HTML/Pug usando ternarias como:
+                    input(type="text", name="nombre", value=usuario ? usuario.nombre : '')
+                    input(type="email", name="email", value=usuario ? usuario.email : '')
+                    input(type="password", name="password")  // ← Este NO se rellena
+
+                💡 Buenas prácticas
+                ✔️ Sí debes guardar y reusar nombre, email, teléfono, etc.
+                ❌ Nunca debes rellenar automáticamente el password, por seguridad.
+
+
+            - Hashear nuestra contraseña.
+                Para hashear nuestra contraseña 
+
+
+                - Creamos un hook :
+                    🔹 ¿Qué es un hook?
+                        Un hook es un gancho o función que se ejecuta automáticamente antes o después de ciertas operaciones en Sequelize, como crear, actualizar o borrar un registro.
+
+                        En este caso, estás usando el hook beforeCreate.
+
+                        hooks: {
+                                beforeCreate: async function(usuario) {
+                                    const salt = await bcrypt.genSalt(10)
+                                    usuario.password = await bcrypt.hash(usuario.password, salt);
+                                    }
+                                }
+
+                    1️⃣ beforeCreate: async function(usuario)
+
+                        - Define un hook que se ejecuta antes de que Sequelize cree un nuevo registro en la base de datos.- 
+                        - La función recibe como argumento el objeto usuario que está a punto de guardarse.
+
+                    2️⃣ const salt = await bcrypt.genSalt(10)
+
+                        - Genera un salt (valor aleatorio) con 10 rondas de complejidad, usado para hacer más seguro el hash de la contraseña.
+                        - El salt ayuda a que el mismo password no genere el mismo hash para diferentes usuarios.
+
+                    3️⃣ usuario.password = await bcrypt.hash(usuario.password, salt)
+
+                        - Convierte el usuario.password (texto plano que el usuario escribió) en un hash seguro usando bcrypt y el salt generado.
+                        - Después de esto, el password almacenado en la base de datos será un hash, no el texto plano, lo cual es fundamental para la seguridad.     
+
+                    ¿Qué logras con esto?
+                        Que siempre que se crea un usuario nuevo, su contraseña sea encriptada automáticamente antes de guardarse, sin tener que preocuparte por hacerlo manualmente cada vez.
+
+        - Generar un token Único para que el usuario confirme su cuenta
+            1.- Ir a la raiz del proyecto y crear una carpeta llamada helpers, ahi se van a alojar funciones reutilizables en diferentes lugares.
+
+            2.- crear el archivo tokens.js
+
+            3.- la siguiente linea nos ayudara a crearlo con base en la fecha en milisegundo que se creo el usuario y un numero aleatorio, de esta manera no tendremos que instalar ninguna libreria. 
+
+                const generarId = () => Date.now().toString(32) + Math.random().toString(32).substring(2);
+
+                - ✅ Date.now().toString(32)
+                - Date.now() devuelve el número de milisegundos desde el 1 de enero de 1970 (Epoch time).
+
+                - .toString(32) convierte ese número a una cadena en base 32, es decir, usando dígitos del 0-9 y letras a-v.
+
+                - Date.now() => 1722917259931
+                Date.now().toString(32) => '1mvm2ex3r' (esto cambia cada segundo)
+
+                Math.random().toString(32)
+                Math.random() genera un número decimal entre 0 y 1 (por ejemplo, 0.715838...).
+
+                .toString(32) lo convierte a base 32. El resultado siempre empieza con 0. porque es un número menor que 1.
+
+                .substring(2) elimina el 0. y deja solo los caracteres aleatorios.
+
+                Lo que nos devuelve la funcion completa es una combinacion de los dos resultados. 
+                    generarId() => '1mvm2ex3r' + 'v81e9q' => '1mvm2ex3rv81e9q'
+
+                ✅ ¿Por qué base 32?
+                Usar base 32 genera una cadena más compacta que usar base 10 o base 16, aprovechando más caracteres con menos longitud.
+
