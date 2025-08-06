@@ -375,3 +375,33 @@
                 ✅ ¿Por qué base 32?
                 Usar base 32 genera una cadena más compacta que usar base 10 o base 16, aprovechando más caracteres con menos longitud.
 
+
+    - Envio de email de confirmacion.
+        - Lo primero es crear nuestra vista de "Cuenta creada correctamente" y notificando el email de confirmacion enviado. 
+            - Creamos primero nuestro archivo mensaje.pug o como lo querramos nombrar que es la vista que se vera una vez se haya registrado el usuario exitosamente. 
+
+                extends ../layout/index.pug
+
+                block contenido
+                    div.py-10
+                        h1.text-4xl.my-10.font-extrabold.text-center Bienes
+                            span.font-normal Raices 
+                        h2.text-center.text-2xl.font-extrabold= pagina
+
+                        p.text-xl.font-bold.text-center.my-10=mensaje
+            
+            - En nuestro controlador usuarios.controller.js renderizamos la vista. especificamente en Registrar y pagina, mensaje son los datos que se mostrarn en nuestra vista. 
+
+                    //Mostrar mensaje de confirmación
+
+                    res.render('templates/mensaje', {
+                        pagina: 'Cuenta Creada Correctamente',
+                        mensaje: 'Hemos Enviado un Email de confirmación, presiona en el enlace'
+                    })
+
+        - Ahora si comenzamos con la parte del envio de emails desde node y para eso se utilizara la dependencia de Nodemailer la cual es la mejor hasta ahorita y la mas completa para node.js y para el envio de emails para simularlo estaremos utilizando una pagina que se llama mailtrap  la cual sirve para probar los emails, checar que lleguen correctamente y que todo funcione bien, antes de hacerlo en un SMTP de algun hosting normal.
+
+            - npm i nodemailer
+
+
+
