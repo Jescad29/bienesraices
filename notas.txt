@@ -403,5 +403,12 @@
 
             - npm i nodemailer
 
+        - Routing dinamico.
+            En vez de escribir rutas fijas como :
+                /usuario/1,
+                /usuario/2, etc...
+            …usas un parámetro dinámico que puede tomar distintos valores:
+                /usuario/:id
+
 
 

@@ -28,7 +28,7 @@ app.use(express.static('public'));
 app.use('/auth', usuarioRoutes);
 
 
-const port = 3000;
+const port = process.env.port || 3000;
 app.listen(port, () => {
     console.log(`El servidor esta funcionando en el puerto ${port}`)
 });
