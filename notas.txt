@@ -409,6 +409,29 @@
                 /usuario/2, etc...
             …usas un parámetro dinámico que puede tomar distintos valores:
                 /usuario/:id
+            
+            📌 Cómo funciona:
+                * Definición de ruta con parámetro
+
+                    - Usas : seguido del nombre del parámetro.
+                    - Ejemplo en Express:
+                        app.get('/usuario/:id', (req, res) => {
+                            res.send(`El ID del usuario es: ${req.params.id}`);
+                        });
+                        Aquí :id es un placeholder que cambiará según la URL.
+                    - Acceso al valor dinámico
+                        Los valores que vienen de la URL se leen con req.params.
+                        Si vas a /usuario/42, entonces:
+                            req.params.id // "42"
+
+                    - Múltiples parámetros
+                        Puedes tener más de uno:
+                            app.get('/producto/:categoria/:id', (req, res) => {
+                                res.send(`Categoría: ${req.params.categoria}, ID: ${req.params.id}`);
+                            });
+
+
+
 
 
 
