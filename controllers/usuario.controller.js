@@ -1,19 +1,83 @@
 import { check, validationResult } from 'express-validator'
 import Usuario from "../models/Usuario.js"
-import { generarId } from '../helpers/tokens.js'
+import { generarId, generarJWT } from '../helpers/tokens.js'
 import { emailRegistro, emailOlvidePassword } from '../helpers/email.js'
 import { where } from 'sequelize'
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 
 const formularioLogin = (req, res) => {
     res.render('auth/login', {
-        pagina: 'Iniciar Sesión'
+        pagina: 'Iniciar Sesión',
+        csrfToken: req.csrfToken()
     })
 }
 
 const autenticar = async (req, res) => {
+    console.log("Autenticando ... ")
+
+    // Validación
+    await check('email').isEmail().withMessage('El Email es Obligatorio').run(req)
+    await check('password').notEmpty().withMessage('El Password es Obligatorio').run(req)
+
+    let resultado = validationResult(req)
+
+    // return res.json(resultado.array())
+
+    // Verificar que el resultado este vacio
+    if (!resultado.isEmpty()) {
+        // Errores
+        return res.render('auth/login', {
+            pagina: 'Iniciar Sesión',
+            csrfToken: req.csrfToken(),
+            errores: resultado.array()
+        })
+    }
+
+    const { email, password } = req.body;
+
+    // Comprobando si el usuario existe
+    const usuario = await Usuario.findOne({ where: { email } });
+    if (!usuario) {
+        return res.render('auth/login', {
+            pagina: 'Iniciar Sesión',
+            csrfToken: req.csrfToken(),
+            errores: [{msg: "El usuario NO Existe"}]
+        })
+    }
+
+    // Comprobar si el usuario esta confirmado 
+    if (!usuario.confirmado) {
+        return res.render('auth/login', {
+            pagina: 'Iniciar Sesión',
+            csrfToken: req.csrfToken(),
+            errores: [{msg: "Tu cuenta no ha sido confirmada"}]
+        })
+    }
+
+    // Revisar el password
+    if (!usuario.verificarPassword(password)) {
+        return res.render('auth/login', {
+            pagina: 'Iniciar Sesión',
+            csrfToken: req.csrfToken(),
+            errores: [{msg: "El password es incorrecto"}]
+        })
+    }
+
+    // Autenticar al usuario
+    const token = generarJWT({ id: usuario.id, nombre: usuario.nombre })
     
+    console.log(token);
+
+    // Almacenar en un cookie
+
+    return res.cookie('_token', token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: true
+    }).redirect('/mis-propiedades');
+
 }
 
 const formularioRegistro = (req, res) => {

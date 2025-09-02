@@ -429,6 +429,8 @@
                             app.get('/producto/:categoria/:id', (req, res) => {
                                 res.send(`Categoría: ${req.params.categoria}, ID: ${req.params.id}`);
                             });
+    - Autenticar con NODE, es muy comun utilizar Keycloak-js, tambien passport y tiene muchas formas de autenticar aun que no esta muy bien documentado.
+      y con jsonwebtoken    
 
 
 
